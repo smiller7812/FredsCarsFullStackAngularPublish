@@ -1,0 +1,53 @@
+@use '../../mixins' as mixins;
+
+$lightBlue: #add8e6;
+
+.hide-results {
+    display: none; 
+}
+
+table {
+    /*border-spacing: 0px;*/
+
+    tr {
+      &:nth-child(even) {
+          background-color: $lightBlue;
+      }
+    }
+
+    height: auto;
+
+    td,th {
+        padding: 5px;
+    }
+}
+
+/*tr.mat-mdc-header-row {
+    background-color: black;
+}*/
+
+/* USING A MIXIN EXAMPLE! */
+/* only works on column templates using ng-container */
+/* -- Doesn't work for mat-text-column */
+/*th.mat-mdc-header-cell {
+  @include mixins.custom-mat-table-header-row;
+}*/
+
+/* only works on column templates using ng-container */
+/* -- Doesn't work for mat-text-column */
+/*td.mat-mdc-cell {
+    border: 1px solid black;
+}*/
+
+mat-sidenav {
+    padding-right: 10px;
+}
+
+li {
+    list-style: none;
+}
+
+.mat-mdc-form-field {
+    font-size: 14px;
+    width: 100%;
+}

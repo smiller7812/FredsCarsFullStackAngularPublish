@@ -1,0 +1,5 @@
+/* Custom MatTable header row css */
+@mixin custom-mat-table-header-row( $font-size: medium, $text-color: #FFFFFF) {
+  font-size: $font-size;
+  color: $text-color;
+}

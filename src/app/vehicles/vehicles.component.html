@@ -1,0 +1,151 @@
+<mat-sidenav-container>
+  <mat-sidenav mode="side" #sidenav>
+    <div style="margin-right: 10px;">
+      <p><b>Search Panel</b></p>
+      <hr />
+      <p><b>Categories</b></p>
+      <mat-checkbox color="primary"
+                    [checked]="allCategoriesSelected"
+                    [indeterminate]="someSearchCategoriesSelected()"
+                    (change)="setAllCategoriesSelected($event.checked)">
+        {{ categoryAll.name }}
+      </mat-checkbox>
+      <ul>
+        <li *ngFor="let category of categoryAll.categories">
+          <mat-checkbox color="accent"
+                        [(ngModel)]="category.selected"
+                        (ngModelChange)="updateAllCategoriesSelected()">
+            {{category.name}}
+          </mat-checkbox>
+        </li>
+      </ul>
+      <button mat-raised-button color="primary"
+              (click)="loadData(null, true)">
+        Search
+      </button>
+    </div>
+
+    <!-- debug -->
+    <!--
+    <div style="margin-top: 40px;">
+      <b>this.search:</b><br />
+      {{ this.search }}<br />
+      <b>categoryAll:</b><br />
+      {{ categoryAll.selected }}<br />
+      <b>Categories:</b>
+      <ul>
+        <li *ngFor="let category of categoryAll.categories">
+          {{category.name}}: {{ category.selected }}
+        </li>
+      </ul>
+
+      <b>categories (stringified):</b><br />
+      {{ categoryAll.categories | json }}
+      
+    </div>
+    -->
+    <!-- debug -->
+  </mat-sidenav>
+  
+  <mat-sidenav-content>
+    <p *ngIf="!dataReady">
+      <mat-spinner style="margin: 0 auto;"></mat-spinner>
+    </p>
+
+    <div *ngIf="dataReady"
+         style="margin-bottom: 10px;">
+      <button mat-fab extended
+              color="primary"
+              (click)="sidenav.toggle()">
+        <mat-icon>
+          search
+        </mat-icon>
+        Advanced Search
+      </button>
+    </div>
+
+    <mat-form-field [ngClass]="{'hide-results' : !dataReady}">
+      <mat-label>Quick Search</mat-label>
+      <input matInput #filter (keyup)="loadData(filter.value)"
+             placeholder="Filter by Make or Model" />
+    </mat-form-field>
+
+    <table mat-table [dataSource]="vehicles"
+           matSort
+           [matSortActive]="defaultSortColumn"
+           [matSortDirection]="defaultSortOrder"
+           (matSortChange)="loadData(filter.value, this.search)"
+           *ngIf="dataReady">
+
+      <ng-container matColumnDef="vehicleType">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Category</th>
+        <td mat-cell *matCellDef="let item">
+          <b>{{ item.vehicleType }}</b>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.id }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.status }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="year">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Year</th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.year }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="make">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Make</th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.make }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="model">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Model</th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.model }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="color">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Color</th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.color }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
+        <td mat-cell *matCellDef="let item">
+          <b>{{ item.price | currency:"USD" }}</b>
+        </td>
+      </ng-container>
+
+      <!-- No VIN on vehicles page.  We will show this on the details page -->
+      <!-- Header Template -->
+      <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+      <!-- Row Template -->
+      <tr mat-row *matRowDef="let row; columns: columnsToDisplay"></tr>
+    </table>
+
+    <mat-paginator (page)="getVehicleData($event)"
+                   [pageSize]="10"
+                   [pageSizeOptions]="[3, 5, 10]"
+                   showFirstLastButtons
+                   [ngClass]="{'hide-results' : !dataReady}">
+    </mat-paginator>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>
